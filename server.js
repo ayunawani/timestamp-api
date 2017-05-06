@@ -1,8 +1,38 @@
 var express = require('express')
 var app = express()
+var moment = require('moment')
 
-app.get('/', function (req, res) {
-  res.send('Hello World!')
+app.get('/', function (req, res, next) {
+  res.send('TimeStamp MicroService')
+  next()
+})
+
+app.get('/:id', function (req, res) {
+  console.log(req.params.id)
+  var date = req.params.id
+  var unix, natural
+
+  /**
+   * Format
+   * "X" : unix
+   * "MMMM D, YYYY" " natural
+   */
+
+  if (parseInt(date) > 0) {
+    unix = parseInt(date)
+    natural = moment(date, 'X').format('MMMM D, YYYY')
+  } else if (isNaN(+date) && moment(date, 'MMMM D, YYYY').isValid()) {
+    unix = moment(date, 'MMMM D, YYYY').format('X')
+    natural = moment(date).format('MMMM D, YYYY')
+  }
+
+  if (!unix) unix = null
+  if (!natural) natural = null
+
+  res.send({
+    unix: unix,
+    natural: natural
+  })
 })
 
 app.listen(3000, function () {
