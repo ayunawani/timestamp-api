@@ -1,11 +1,12 @@
 var express = require('express')
 var app = express()
 var moment = require('moment')
+var home = require('./routes/home')
+var path = require('path')
 
-app.get('/', function (req, res, next) {
-  res.send('TimeStamp MicroService')
-  next()
-})
+
+app.use(express.static(path.join(__dirname, 'public')))
+app.use('/', home)
 
 app.get('/:id', function (req, res) {
   console.log(req.params.id)
@@ -36,5 +37,5 @@ app.get('/:id', function (req, res) {
 })
 
 app.listen(process.env.PORT || 3000, function () {
-  console.log('TimeStamp Service listening on port 3000!')
+  console.log('TimeStamp Service listening on port ' + (process.env.PORT || 3000))
 })
